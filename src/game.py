@@ -8,5 +8,6 @@ import src.view.view as view
 
 
 def main():
-    view.buildTitleWindow()
+    title_screen = view.TitleScreenView(0)
+    title_screen.buildWindow()
     pyglet.app.run()
