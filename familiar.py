@@ -3,9 +3,7 @@
 import pyglet
 import src.game as game
 
-## Redefine the resource path to reference the internal folder
-pyglet.resource.path = ['res']
-pyglet.resource.reindex()
-
 ## Run the game
-game.main()
+if __name__ == '__main__':
+    pyglet.clock.schedule_interval(game.update, 1/120.0)
+    pyglet.app.run()

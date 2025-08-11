@@ -3,56 +3,35 @@
 
 import pyglet
 
-## Overall views that include the game display and collections of UI elements
-class ViewObject:
-    ## Constructor with a zlayer argument
-    #  @param zlayer the layer the object is displayed in the frame. lower numbers are further back in the frame
-    def __init__(self, zlayer):
-        self.__zlayer = zlayer
-        return
-    
-    ## Builds the object's pyglet window
-    def buildWindow(self):
-        self.__window = pyglet.window.Window()
-
-        @self.__window.event
-        def on_draw():
-            self.__window.clear()
-        return
-
-    ## Get the zlayer private variable
-    def getZlayer(self):
-        return self.__zlayer
-
-## Class to create a Title Screen
-class TitleScreenView(ViewObject):
-    ## Constructor with a zlayer argument
-    def __init__(self, zlayer):
-        super().__init__(zlayer)
-    
-    ## Build the title screen window
-    def buildWindow(self):
-        ## Define the window
-        self.__window = pyglet.window.Window(1920, 1080)
-        ## Load the icons and assign them to the window
-        icon16 = pyglet.resource.image("icon16.png")
-        icon32 = pyglet.resource.image("icon32.png")
-        self.__window.set_icon(icon16, icon32)
-        ## Load the background image and create a sprite from it for use
-        bg_image = pyglet.resource.image("title_bg.png")
-        bg_sprite = pyglet.sprite.Sprite(img=bg_image)
-        ## Create the title label
-        label = pyglet.text.Label('FAMILIAR',
-                          font_name='Times New Roman',
-                          font_size=50,
-                          weight='bold',
-                          color=(0,0,0,255),
-                          x=self.__window.width//2, y=(self.__window.height//6)*5,
-                          anchor_x='center', anchor_y='center')
-        ## Define the on_draw function to clear the window and draw the sprite and label
-        @self.__window.event
-        def on_draw():
-            self.__window.clear()
-            bg_sprite.draw()
-            label.draw()
-        return
+## Class for menu buttons 
+class MenuButton(pyglet.sprite.Sprite):
+    ## Constructor
+    def __init__(self, unpressed:pyglet.image.AbstractImage, pressed:pyglet.image.AbstractImage,
+            hover:pyglet.image.AbstractImage, on_action, *args, **kwargs):
+        super().__init__(img=unpressed, *args, **kwargs)
+        self.unpressed = unpressed
+        self.pressed = pressed
+        self.hover = hover
+        self.is_pressed = False
+        self.is_hovered = False
+        self.on_action = on_action
+    ## Change status to hovered
+    def is_now_hovered(self):
+        if not self.is_hovered and not self.is_pressed:
+            self.is_hovered = True
+            self.image = self.hover
+    ## Change status to not hovered
+    def is_now_not_hovered(self):
+        if self.is_hovered and not self.is_pressed:
+            self.is_hovered = False
+            self.image = self.unpressed
+    ## Change status to pressed
+    def is_now_pressed(self):
+        if not self.is_pressed:
+            self.is_pressed = True
+            self.image = self.pressed
+    ## Change status to not pressed
+    def is_now_not_pressed(self):
+        if self.is_pressed:
+            self.is_pressed = False
+            self.image = self.unpressed
