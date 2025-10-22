@@ -9,13 +9,29 @@ import src.resources as resources
 ## Define the overall game window
 display = pyglet.display.get_display()
 screen = display.get_default_screen()
-win_pos_x = (screen.width - 800) // 2
-win_pos_y = (screen.height - 600) // 2
-game_window = pyglet.window.Window(800, 600, resizable=False, visible=False)
+win_pos_x = (screen.width - 640) // 2
+win_pos_y = (screen.height - 360) // 2
+game_window = pyglet.window.Window(640, 360, resizable=False, visible=False)
 game_window.set_icon(resources.icon16, resources.icon32)
 game_window.set_caption("FAMILIAR")
 game_window.set_location(win_pos_x, win_pos_y)
 game_window.set_visible()
+
+## Define the game controls
+game_input = pyglet.window.key.KeyStateHandler()
+game_window.push_handlers(game_input)
+game_window.set_exclusive_keyboard
+game_window.set_exclusive_mouse
+## Prevent ESC from closing the game
+@game_window.event
+def on_key_press(symbol, modifiers):
+    game_input.on_key_press(symbol, modifiers)
+    return pyglet.event.EVENT_HANDLED
+
+@game_window.event
+def on_key_release(symbol, modifiers):
+    game_input.on_key_release(symbol, modifiers)
+    return pyglet.event.EVENT_HANDLED
 
 ## Define the batch renderer and associated groups
 game_batch = pyglet.graphics.Batch()
@@ -36,26 +52,26 @@ def on_draw():
 def changeToTitleState():
     global game_state
     global game_screens
-    game_state = GameState.GameState.TITLE
+    game_state = GameState.GameState.TRANSITION
     for screen in game_screens:
         screen.delete()
         game_screens.remove(screen)
     title_screen = TitleScreen.TitleScreen(game_batch, game_groups)
-    game_window.push_handlers(title_screen)
     game_screens.append(title_screen)
+    game_state = GameState.GameState.TITLE
     return
 
 ## Changes the game to the Game state //PLACEHOLDER//
 def changeToGameState():
     global game_state
     global game_screens
-    game_state = GameState.GameState.GAME
+    game_state = GameState.GameState.TRANSITION
     for screen in game_screens:
         screen.delete()
         game_screens.remove(screen)    
     game_screen = GameScreen.GameScreen(game_batch, game_groups)
-    game_window.push_handlers(game_screen)
     game_screens.append(game_screen)
+    game_state = GameState.GameState.GAME
     return
 
 ## Changes the game to the quit state
@@ -66,7 +82,6 @@ def changeToQuitState():
         screen.delete()
         game_screens.remove(screen)
     game_state = GameState.GameState.QUIT
-    game_window.close()
     return
 
 game_state = None
@@ -74,11 +89,13 @@ game_screens = []
 ## Game loop update function
 def update(dt):
     match game_state:
+        case GameState.GameState.TRANSITION:
+            return
         case GameState.GameState.TITLE:
-            #TODO
+            game_screens[0].update(dt)
             return
         case GameState.GameState.GAME:
-            #TODO
+            game_screens[0].update(dt)
             return
         case GameState.GameState.QUIT:
             game_window.close()

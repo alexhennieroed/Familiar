@@ -7,3 +7,4 @@ class GameState(Enum):
     TITLE = 1
     GAME = 2
     QUIT = 3
+    TRANSITION = 4

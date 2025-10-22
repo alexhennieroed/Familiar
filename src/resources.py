@@ -1,5 +1,6 @@
 ## @moduel resources
 #  Defines the resource variables for use in the game
+#  The game is based on a 32x32 pixel grid
 
 import pyglet
 
@@ -26,3 +27,6 @@ title_play_hover = pyglet.resource.image("title_button_play_hover.png")
 title_quit_unpressed = pyglet.resource.image("title_button_quit_unpressed.png")
 title_quit_pressed = pyglet.resource.image("title_button_quit_pressed.png")
 title_quit_hover = pyglet.resource.image("title_button_quit_hover.png")
+
+## Entity Textures
+player_texture = pyglet.resource.image("player32.png")

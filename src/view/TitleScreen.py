@@ -2,6 +2,7 @@
 #  Defines the title screen
 
 import pyglet
+import time
 import src.game as game
 import src.resources as resources
 import src.controller.controls as controls
@@ -30,13 +31,13 @@ class TitleScreen:
     def buildTitleScreen(self):
         ## Build the UI elements
         title_bg_sprite = pyglet.sprite.Sprite(img=resources.title_bg, batch=self.batch, group=self.background)
-        title_banner_sprite = pyglet.sprite.Sprite(img=resources.title_banner, x=200, y=450,
+        title_banner_sprite = pyglet.sprite.Sprite(img=resources.title_banner, x=100, y=250,
                                         batch=self.batch, group=self.foreground)
         play_button_sprite = view.MenuButton(unpressed=resources.title_play_unpressed, pressed=resources.title_play_pressed,
-                                        hover=resources.title_play_hover, x=300, y=250, on_action=game.changeToGameState,
+                                        hover=resources.title_play_hover, x=200, y=125, on_action=game.changeToGameState,
                                         batch=self.batch, group=self.foreground)
         quit_button_sprite = view.MenuButton(unpressed=resources.title_quit_unpressed, pressed=resources.title_quit_pressed,
-                                        hover=resources.title_quit_hover, x=300, y=50, on_action=game.changeToQuitState,
+                                        hover=resources.title_quit_hover, x=200, y=10, on_action=game.changeToQuitState,
                                         batch=self.batch, group=self.foreground)
         ## Add selectable menu elements to the list for tracking
         self.selectables.append(play_button_sprite)
@@ -48,23 +49,24 @@ class TitleScreen:
         self.object_list.append(quit_button_sprite)
     
     ## Handle Key Press
-    def on_key_press(self, symbol, modifiers):
-        if symbol in controls.menu["up"]:
+    def update(self, dt):
+        time.sleep(0.1)
+        if game.game_input[controls.menu["up"][0]] or game.game_input[controls.menu["up"][1]]:
             self.selectables[self.selected].is_now_not_hovered()
             self.selected -= 1
             if self.selected < 0:
                 self.selected = len(self.selectables) - 1
             self.selectables[self.selected].is_now_hovered()
-        elif symbol in controls.menu["down"]:
+        elif game.game_input[controls.menu["down"][0]] or game.game_input[controls.menu["down"][1]]:
             self.selectables[self.selected].is_now_not_hovered()
             self.selected += 1
             if self.selected >= len(self.selectables):
                 self.selected = 0
             self.selectables[self.selected].is_now_hovered()
-        elif symbol in controls.menu["accept"]:
+        elif game.game_input[controls.menu["accept"][0]]:
             self.selectables[self.selected].is_now_pressed()
             self.selectables[self.selected].on_action()
-        elif symbol in controls.menu["cancel"]:
+        elif game.game_input[controls.menu["cancel"][0]]:
             self.selectables[self.selected].is_now_not_hovered()
             self.selected = len(self.selectables) - 1
             self.selectables[self.selected].is_now_hovered()
