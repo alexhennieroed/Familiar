@@ -2,10 +2,12 @@
 #  Class for the player character
 
 from enum import Enum
+
+import src.controller.controls as controls
+import src.game as game
 import src.resources as resources
 from src.model.GameObject import GameObject
-import src.game as game
-import src.controller.controls as controls
+
 
 ## Various states for the player character
 class PlayerState(Enum):
@@ -17,6 +19,7 @@ class PlayerState(Enum):
     DAMAGE = 6
     DEATH = 7
 
+
 ## Class for a player character
 class Player(GameObject):
     ## Constructor
@@ -24,22 +27,34 @@ class Player(GameObject):
         self.velocity_x = 0
         self.velocity_y = 0
         super().__init__(img=resources.player_texture, *args, **kwargs)
-    
+
     ## Update the character based on
     def update(self, dt):
         # Check for interaction input
         if game.game_input[controls.game["big_menu"][0]]:
-            #TODO: Implement pause menu
+            # TODO: Implement pause menu
             game.changeToTitleState()
             return True
         # Check for movement input
-        if game.game_input[controls.game["up"][0]] or game.game_input[controls.game["up"][1]]:
+        if (
+            game.game_input[controls.game["up"][0]]
+            or game.game_input[controls.game["up"][1]]
+        ):
             self.velocity_y += 500
-        elif game.game_input[controls.game["down"][0]] or game.game_input[controls.game["down"][1]]:
+        elif (
+            game.game_input[controls.game["down"][0]]
+            or game.game_input[controls.game["down"][1]]
+        ):
             self.velocity_y += -500
-        elif game.game_input[controls.game["left"][0]] or game.game_input[controls.game["left"][1]]:
+        elif (
+            game.game_input[controls.game["left"][0]]
+            or game.game_input[controls.game["left"][1]]
+        ):
             self.velocity_x += -500
-        elif game.game_input[controls.game["right"][0]] or game.game_input[controls.game["right"][1]]:
+        elif (
+            game.game_input[controls.game["right"][0]]
+            or game.game_input[controls.game["right"][1]]
+        ):
             self.velocity_x += 500
         # Update position
         self.x += self.velocity_x * dt
@@ -48,3 +63,4 @@ class Player(GameObject):
         self.velocity_x = 0
         self.velocity_y = 0
         return
+

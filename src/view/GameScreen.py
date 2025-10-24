@@ -2,10 +2,9 @@
 #  Defines the game screen
 
 import pyglet
-import src.game as game
-import src.resources as resources
-import src.controller.controls as controls
+
 import src.model.Player as player
+import src.resources as resources
 
 
 ## Class to represent a game screen
@@ -22,14 +21,14 @@ class GameScreen:
     ## Build the game screen
     def buildGameScreen(self):
         ## Build the UI elements
-        game_bg_sprite = pyglet.sprite.Sprite(img=resources.game_bg, batch=self.batch, group=self.groups[0])
-        game_placeholder_sprite = pyglet.sprite.Sprite(img=resources.game_placeholder, batch=self.batch, group=self.groups[4])
+        game_bg_sprite = pyglet.sprite.Sprite(
+            img=resources.game_bg, batch=self.batch, group=self.groups[0]
+        )
         game_player_sprite = self.player
         ## Add the elements to the object list for tracking
         self.object_list.append(game_bg_sprite)
-        self.object_list.append(game_placeholder_sprite)
         self.object_list.append(game_player_sprite)
-    
+
     ## Set as visible or invisible
     def setScreenVisible(self, visible):
         if not self.visible == visible:
@@ -47,3 +46,4 @@ class GameScreen:
     def delete(self):
         for obj in self.object_list:
             obj.delete()
+
